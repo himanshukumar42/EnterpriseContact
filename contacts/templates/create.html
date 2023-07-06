@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible"
+		content="IE=edge">
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0">
+	<title>
+		Build a Survey Form using HTML and CSS
+	</title>
+
+	<style>
+
+		/* Styling the Body element i.e. Color,
+		Font, Alignment */
+		body {
+			background-color:white;
+			font-family: Verdana;
+			text-align: center;
+		}
+
+		/* Styling the Form (Color, Padding, Shadow) */
+		form {
+			background-color: #fff;
+			max-width: 500px;
+			margin: 50px auto;
+			padding: 30px 20px;
+			box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.5);
+		}
+
+		/* Styling form-control Class */
+		.form-control {
+			text-align: left;
+			margin-bottom: 25px;
+		}
+
+		/* Styling form-control Label */
+		.form-control label {
+			display: block;
+			margin-bottom: 10px;
+		}
+
+		/* Styling form-control input,
+		select, textarea */
+		.form-control input,
+		.form-control select,
+		.form-control textarea {
+			border: 1px solid #777;
+			border-radius: 2px;
+			font-family: inherit;
+			padding: 10px;
+			display: block;
+			width: 95%;
+		}
+
+		/* Styling form-control Radio
+		button and Checkbox */
+		.form-control input[type="radio"],
+		.form-control input[type="checkbox"] {
+			display: inline-block;
+			width: auto;
+		}
+
+		/* Styling Button */
+		button {
+			background-color: #05c46b;
+			border: 1px solid #777;
+			border-radius: 2px;
+			font-family: inherit;
+			font-size: 21px;
+			display: block;
+			width: 100%;
+			margin-top: 50px;
+			margin-bottom: 20px;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Create Enterprise Emergency Contact</h1>
+
+	<!-- Create Form -->
+	<form id="form" method="POST", action="{% url 'create-contacts' %}">
+
+		<!-- Details -->
+		<div class="form-control">
+			<label for="name" id="label-name">
+				First_nameName
+			</label>
+
+			<!-- Input Type Text -->
+			<input type="text"
+				   name="first_name"
+				id="name"
+				placeholder="Enter your First_name" />
+		</div>
+        <div class="form-control">
+			<label for="name" id="label-name">
+				Last_namet_nameName
+			</label>
+
+			<!-- Input Type Text -->
+			<input type="text"
+				id="name"
+				   name="last_name"
+				placeholder="Enter your Last_name" />
+		</div>
+
+		<div class="form-control">
+			<label for="email" id="label-email">
+				Email Address
+			</label>
+
+			<!-- Input Type Email-->
+			<input type="email"
+				   name="email"
+				id="email"
+				placeholder="Enter your email" />
+		</div>
+
+		<div class="form-control mb-2">
+			<label for="role" id="label-role">
+				Country Code
+			</label>
+            <span class="input-group-text" id="addon-wrapping">
+            <select name="country_code" id="role">
+				<option value="+1">USA(+01)</option>
+				<option value="+44">United Kingdom(+44)</option>
+				<option value="+91">(IND)+91</option>
+				<option value="+10">
+					(PAK)+10
+				</option>
+			</select>
+            </span>
+            <br>
+
+  <input type="text" name="mobile" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+</div>
+
+
+
+		<div class="form-control">
+            <label for="comment">
+                Events Notifications
+            </label>
+            <label for="recommed-1">
+				<input type="radio"
+					id="recommed-1"
+					name="event_notification" value="all_app_users">All Organization App </input>
+			</label>
+			<label for="recommed-2">
+				<input type="radio"
+					id="recommed-2"
+					name="event_notification" value="groups">Select Notifications Group</input>
+			</label>
+            <!-- multi-line text input control -->
+            <textarea name="comment" id="comment"
+                placeholder="">
+            </textarea>
+        </div>
+		<div class="form-control">
+			<label>
+				Status
+			</label>
+
+			<!-- Input Type Radio Button -->
+			<label for="recommed-1">
+				<input type="radio"
+					id="recommed-1"
+					name="status" value="active">Active</input>
+			</label>
+			<label for="recommed-2">
+				<input type="radio"
+					id="recommed-2"
+					name="status" value="inactive">In-Active</input>
+			</label>
+		</div>
+
+		<div class="form-control">
+			<label>Event Type
+			</label>
+			<!-- Input Type Checkbox -->
+			<label for="inp-1">
+				<input type="checkbox"
+					name="event_types" value="sos">SOS</input></label>
+			<label for="inp-3">
+				<input type="checkbox"
+					name="event_types" value="all">All</input></label>
+			<label for="inp-4">
+				<input type="checkbox"
+					name="event_types" value="timer">Timer</input></label>
+			<label for="inp-6">
+				<input type="checkbox"
+					name="event_types" value="soft_walk">Soft Walk</input></label>
+		</div>
+
+
+		<!-- Multi-line Text Input Control -->
+		<button type="submit" value="submit">
+			Submit
+		</button>
+
+        <button type="submit" value="submit">
+			Cancel
+		</button>
+	</form>
+</body>
+</html>
