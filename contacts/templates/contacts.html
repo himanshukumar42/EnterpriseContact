@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %} Home Page {% endblock %}
+{% block stylesheet %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+{% endblock %}
+{% block content %}
+ <div class="table-wrapper">
+        <div class="table-title">
+            <h2>Search</h2>
+        </div>
+        <form class="search-form">
+            <input type="text" name="search" placeholder="Enter your search query...">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6">
+						<h2>Manage <b>Employees</b></h2>
+					</div>
+					<div class="col-sm-6">
+						<a href="{% url 'contact-create' %}" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Employee</span></a>
+					</div>
+                </div>
+            </div>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+						<th>
+							<span class="custom-checkbox">
+								<input type="checkbox" id="selectAll">
+								<label for="selectAll"></label>
+							</span>
+						</th>
+                        <th>First Name</th>
+						<th>Last Name</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
+						<th>Event Types</th>
+                        <th>Active</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for contact in contacts %}
+                    <tr>
+						<td>
+							<span class="custom-checkbox">
+								<input type="checkbox" id="checkbox1" name="options[]" value="1">
+								<label for="checkbox1"></label>
+							</span>
+						</td>
+                        <td>{{contact.first_name}}</td>
+						<td>{{contact.last_name}}</td>
+                        <td>{{contact.email}}</td>
+						<td>{{contact.mobile}}</td>
+						<td>{{contact.event_types}}</td>
+                        <td><input type="checkbox" id="myCheckbox" checked></td>
+                        <td>
+                            <a href="{% url 'contact-update' contact.id %}" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+                            <a href="{% url 'contact-delete' contact.id %}" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+{% endblock %}
