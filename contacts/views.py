@@ -1,10 +1,8 @@
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
-from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import DeleteView
 from django.urls import reverse_lazy
 from .models import Contacts
-from .forms import ContactsForm
 from rest_framework.views import APIView
 from .serializers import ContactSerializer
 from django.shortcuts import redirect
@@ -20,18 +18,7 @@ from django.db.models import Q
 def health_check(request): # noqa
     return HttpResponse("<h1>Health Ok</h1>")
 
-# class ContactsCreate(CreateView):
-#     model = Contacts
-#     form_class = ContactsForm
-#     success_url = reverse_lazy('index')
-#
-#
-# class ContactsUpdate(UpdateView):
-#     model = Contacts
-#     fields = '__all__'
-#     success_url = reverse_lazy('index')
-#
-#
+
 class ContactsDelete(DeleteView):
     model = Contacts
     fields = '__all__'
@@ -49,6 +36,10 @@ class ContactsSearchAPIVIew(APIView):
                 Q(event_types__icontains=request.query_params['search']) |
                 Q(status__icontains=request.query_params['search'])
                 )
+            if "status" in request.query_params.keys():
+                contacts = contacts.filter(status=request.query_params['status'])
+        elif "search" not in request.query_params.keys() and "status" in request.query_params.keys():
+            contacts = Contacts.objects.filter(status=request.query_params['status'])
         else:
             contacts = Contacts.objects.all()
 
