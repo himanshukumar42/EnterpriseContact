@@ -81,7 +81,7 @@
 	<h1>Create Enterprise Emergency Contact</h1>
 
 	<!-- Create Form -->
-	<form id="form" method="POST" action="{% url 'update-contacts' contact.id %}">
+	<form id="form" method="POST" action="{% url 'update-contacts' data.contact.id %}">
 
 		<!-- Details -->
 		<div class="form-control">
@@ -146,30 +146,14 @@
 			</label>
             <span class="input-group-text" id="addon-wrapping">
             <select name="country_code" id="role">
-				{% if contact.country_code == '+1' %}
-					<option value="+1" selected>USA(+01)</option>
+				{% for country in data.country_choices %}
+				{% if data.contact.country_code == country.0 %}
+									<option value="{{ country.0 }}" selected>{{ country.1 }}</option>
 				{% else %}
-				<option value="+1">USA(+01)</option>
+										<option value="{{ country.0 }}">{{ country.1 }}</option>
 				{% endif %}
-				{% if contact.country_code == '+44' %}
-				<option value="+44" selected>United Kingdom(+44)</option>
-				{% else %}
-								<option value="+44">United Kingdom(+44)</option>
-				{% endif %}
-				{% if contact.country_code == '+91' %}
-				<option value="+91" selected>(IND)+91</option>
-				{% else %}
-				<option value="+91">(IND)+91</option>
-				{% endif %}
-				{% if contact.country_code == '+10' %}
-				<option value="+10" selected>
-					(PAK)+10
-				</option>
-				{% else %}
-				<option value="+10">
-					(PAK)+10
-				</option>
-				{% endif %}
+				{% endfor %}
+
 			</select>
             </span>
             <br>
@@ -187,33 +171,21 @@
             <label for="comment">
                 Events Notifications
             </label>
-			{% if contact.event_notification == 'all_app_users' %}
+			{% for notification in data.notification_choices %}
+			{% if data.contact.event_notification == notification.0 %}
             <label for="recommed-1">
 				<input type="radio"
 					id="recommed-1"
-					name="event_notification" value="all_app_users" checked>All Organization App </input>
+					name="event_notification" value="{{ notification.0 }}" checked>{{ notification.1 }}</input>
 			</label>
 			{% else %}
 			<label for="recommed-1">
 				<input type="radio"
 					id="recommed-1"
-					name="event_notification" value="all_app_users">All Organization App </input>
+					name="event_notification" value="{{ notificatin.0 }}">{{ notification.1 }}</input>
 			</label>
 			{% endif %}
-
-			{% if contact.event_notification == 'groups' %}
-			<label for="recommed-2">
-				<input type="radio"
-					id="recommed-2"
-					name="event_notification" value="groups" checked>Select Notifications Group</input>
-			</label>
-			{% else %}
-			<label for="recommed-2">
-				<input type="radio"
-					id="recommed-2"
-					name="event_notification" value="groups">Select Notifications Group</input>
-			</label>
-			{% endif %}
+			{% endfor %}
             <!-- multi-line text input control -->
 			{% if contact.groups %}
             <textarea name="groups" id="comment"
@@ -230,75 +202,38 @@
 			</label>
 
 			<!-- Input Type Radio Button -->
-			{% if contact.status == 'active' %}
-			<label for="recommed-1">
-				<input type="radio"
+			{% for status in data.status_choices %}
+				{% if data.contact.status == status.0 %}
+				<label for="recommed-1">
+					<input type="radio"
 					id="recommed-1"
-					name="status" value="active" checked>Active</input>
-			</label>
-			{% else %}
-			<label for="recommed-1">
-				<input type="radio"
+					name="status" value="{{ status.0 }}" checked>{{ status.1 }}</input>
+				</label>
+				{% else %}
+				<label for="recommed-1">
+					<input type="radio"
 					id="recommed-1"
-					name="status" value="active">Active</input>
-			</label>
-			{% endif %}
-			{% if contact.status == 'inactive' %}
-			<label for="recommed-2">
-				<input type="radio"
-					id="recommed-2"
-					name="status" value="inactive" checked>In-Active</input>
-			</label>
-			{% else %}
-			<label for="recommed-2">
-				<input type="radio"
-					id="recommed-2"
-					name="status" value="inactive">In-Active</input>
-			</label>
-			{% endif %}
+					name="status" value="{{ status.0 }}">{{ status.1 }}</input>
+				</label>
+				{% endif %}
+			{% endfor %}
 		</div>
 
 		<div class="form-control">
 			<label>Event Type
 			</label>
 			<!-- Input Type Checkbox -->
+			{% for event in data.event_choices %}
 			<label for="inp-1">
-				{% if 'sos' in contact.event_types %}
+				{% if event.0 in data.contact.event_types %}
 				<input type="checkbox"
-					name="event_types" value="sos" checked>SOS</input></label>
+					name="event_types" value="{{ event.0 }}" checked>{{ event.1 }}</input></label>
 				{% else %}
 				<input type="checkbox"
-					name="event_types" value="sos">SOS</input></label>
+					name="event_types" value="{{ event.0 }}">{{ event.1 }}</input></label>
 				{% endif %}
-
-			{% if 'all' in contact.event_types %}
-			<label for="inp-3">
-				<input type="checkbox"
-					name="event_types" value="all" checked>All</input></label>
-			{% else %}
-			<input type="checkbox"
-					name="event_types" value="all">All</input></label>
-			{% endif %}
-			{% if 'timer' in contact.event_types %}
-			<label for="inp-4">
-				<input type="checkbox"
-					name="event_types" value="timer" checked>Timer</input></label>
-			{% else %}
-			<label for="inp-4">
-				<input type="checkbox"
-					name="event_types" value="timer">Timer</input></label>
-			{% endif %}
-			{% if 'soft_walk' in contact.event_types %}
-			<label for="inp-6">
-				<input type="checkbox"
-					name="event_types" value="soft_walk" checked>Soft Walk</input></label>
-			{% else %}
-			<label for="inp-6">
-				<input type="checkbox"
-					name="event_types" value="soft_walk">Soft Walk</input></label>
-			{% endif %}
+			{% endfor %}
 		</div>
-
 
 		<!-- Multi-line Text Input Control -->
 		<button type="submit" value="submit">

@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from django.views.generic.edit import DeleteView
 from django.contrib.auth.models import Group
 from django.urls import reverse_lazy
-from .models import Contacts
+from .models import Contacts, EVENT_CHOICES, COUNTRY_CHOICES, GROUPS, STATUS, NOTIFY
 from rest_framework.views import APIView
 from .serializers import ContactSerializer
 from django.shortcuts import redirect
@@ -52,19 +52,15 @@ class ContactsSearchAPIVIew(APIView):
         return response
 
 
-class ContactsGetAPIView(APIView):
-    def get(self, request):
-        contacts = Contacts.objects.all()
-        serializer = ContactSerializer(contacts, many=True)
-        rendered_html = render_to_string('index.html', {'contacts': serializer.data})
-        response = HttpResponse(content_type='text/html')
-        response.write(rendered_html)
-        return response
-
-
 class ContactsPostAPIView(APIView):
     def get(self, request):
-        return render(request, "create.html")
+        return render(request, "create.html", context={"data": {
+            "event_choices": EVENT_CHOICES,
+            "country_choices": COUNTRY_CHOICES,
+            "status_choices": STATUS,
+            "notification_choices": NOTIFY,
+            "groups_choices": GROUPS
+        }})
 
     def post(self, request):
         data = request.data
@@ -83,7 +79,14 @@ class ContactsPostAPIView(APIView):
 class ContactsUpdateAPIView(APIView):
     def get(self, request, pk):
         contact = Contacts.objects.get(pk=pk)
-        return render(request, 'edit.html', context={"contact": contact})
+        return render(request, 'edit.html', context={"data": {
+            "contact": contact,
+            "event_choices": EVENT_CHOICES,
+            "country_choices": COUNTRY_CHOICES,
+            "status_choices": STATUS,
+            "notification_choices": NOTIFY,
+            "groups_choices": GROUPS
+        }})
 
     def post(self, request, pk):
         instance = self.get_object(pk)
