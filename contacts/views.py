@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from django.views.generic.edit import DeleteView
+from django.contrib.auth.models import Group
 from django.urls import reverse_lazy
 from .models import Contacts
 from rest_framework.views import APIView
@@ -12,6 +13,7 @@ from django.shortcuts import render
 from rest_framework import status
 from django.http import QueryDict
 from django.db.models import Q
+import json
 
 
 @api_view(('GET',))
@@ -70,6 +72,7 @@ class ContactsPostAPIView(APIView):
         new_data = QueryDict(mutable=True)
         new_data.update(data)
         new_data['event_types'] = event_types
+        new_data['groups'] = data.get('groups').strip()
         serializer = ContactSerializer(data=new_data)
         if serializer.is_valid():
             serializer.save()

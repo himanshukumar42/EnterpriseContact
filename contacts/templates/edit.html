@@ -215,9 +215,14 @@
 			</label>
 			{% endif %}
             <!-- multi-line text input control -->
-            <textarea name="comment" id="comment"
-                placeholder="">
-            </textarea>
+			{% if contact.groups %}
+            <textarea name="groups" id="comment"
+                placeholder="">{{ contact.groups }}</textarea>
+			{% else %}
+			 <textarea name="groups" id="comment"
+                placeholder=""></textarea>
+			{% endif %}
+
         </div>
 		<div class="form-control">
 			<label>

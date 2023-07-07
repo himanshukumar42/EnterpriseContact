@@ -82,7 +82,7 @@
 
 	<!-- Create Form -->
 	<form id="form" method="POST", action="{% url 'create-contacts' %}">
-
+	{% csrf_token %}
 		<!-- Details -->
 		<div class="form-control">
 			<label for="name" id="label-name">
@@ -155,9 +155,8 @@
 					name="event_notification" value="groups">Select Notifications Group</input>
 			</label>
             <!-- multi-line text input control -->
-            <textarea name="comment" id="comment"
-                placeholder="">
-            </textarea>
+            <textarea name="groups" id="comment"
+                placeholder=""></textarea>
         </div>
 		<div class="form-control">
 			<label>
