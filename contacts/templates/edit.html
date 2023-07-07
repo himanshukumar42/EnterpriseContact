@@ -82,7 +82,7 @@
 
 	<!-- Create Form -->
 	<form id="form" method="POST" action="{% url 'update-contacts' data.contact.id %}">
-
+	{% csrf_token %}
 		<!-- Details -->
 		<div class="form-control">
 			<label for="name" id="label-name">
@@ -90,10 +90,10 @@
 			</label>
 
 			<!-- Input Type Text -->
-            {% if contact.first_name %}
+            {% if data.contact.first_name %}
             <input type="text"
 				   name="first_name"
-				id="name" value="{{ contact.first_name }}"
+				id="name" value="{{ data.contact.first_name }}"
 				placeholder="Enter your First_name" />
             {% else %}
 			<input type="text"
@@ -108,10 +108,10 @@
 			</label>
 
 			<!-- Input Type Text -->
-			{% if contact.last_name %}
+			{% if data.contact.last_name %}
 			<input type="text"
 				id="name"
-				   name="last_name" value="{{ contact.last_name }}"
+				   name="last_name" value="{{ data.contact.last_name }}"
 				placeholder="Enter your Last_name" />
 			{% else %}
 			<input type="text"
@@ -127,9 +127,9 @@
 			</label>
 
 			<!-- Input Type Email-->
-			{% if contact.last_name %}
+			{% if data.contact.email %}
 			<input type="email"
-				   name="email" value="{{contact.email}}"
+				   name="email" value="{{data.contact.email}}"
 				id="email"
 				placeholder="Enter your email" />
 			{% else %}
@@ -158,8 +158,8 @@
             </span>
             <br>
 
-			{% if contact.mobile %}
-  <input type="text" name="mobile" value="{{ contact.mobile }}" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+			{% if data.contact.mobile %}
+  <input type="text" name="mobile" value="{{ data.contact.mobile }}" class="form-control" id="basic-url" aria-describedby="basic-addon3">
 			{% else %}
   <input type="text" name="mobile" class="form-control" id="basic-url" aria-describedby="basic-addon3">
 			{% endif %}
@@ -187,9 +187,10 @@
 			{% endif %}
 			{% endfor %}
             <!-- multi-line text input control -->
-			{% if contact.groups %}
+
+			{% if data.contact.groups %}
             <textarea name="groups" id="comment"
-                placeholder="">{{ contact.groups }}</textarea>
+                placeholder="">{{ data.contact.groups }}</textarea>
 			{% else %}
 			 <textarea name="groups" id="comment"
                 placeholder=""></textarea>

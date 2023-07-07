@@ -101,13 +101,13 @@ class ContactsUpdateAPIView(APIView):
             return redirect('index')
         return render(request, 'edit.html')
 
-    def patch(self, request, pk):
-        instance = self.get_object(pk)
-        serializer = ContactSerializer(instance, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return redirect('index')
-        return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    # def patch(self, request, pk):
+    #     instance = self.get_object(pk)
+    #     serializer = ContactSerializer(instance, data=request.data, partial=True)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return redirect('index')
+    #     return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def delete(self, request, pk):
         try:
