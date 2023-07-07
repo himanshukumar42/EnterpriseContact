@@ -81,7 +81,7 @@
 	<h1>Create Enterprise Emergency Contact</h1>
 
 	<!-- Create Form -->
-	<form id="form" method="POST", action="{% url 'update-contacts' %}">
+	<form id="form" method="POST" action="{% url 'update-contacts' contact.id %}">
 
 		<!-- Details -->
 		<div class="form-control">
@@ -187,16 +187,33 @@
             <label for="comment">
                 Events Notifications
             </label>
+			{% if contact.event_notification == 'all_app_users' %}
             <label for="recommed-1">
+				<input type="radio"
+					id="recommed-1"
+					name="event_notification" value="all_app_users" checked>All Organization App </input>
+			</label>
+			{% else %}
+			<label for="recommed-1">
 				<input type="radio"
 					id="recommed-1"
 					name="event_notification" value="all_app_users">All Organization App </input>
 			</label>
+			{% endif %}
+
+			{% if contact.event_notification == 'groups' %}
+			<label for="recommed-2">
+				<input type="radio"
+					id="recommed-2"
+					name="event_notification" value="groups" checked>Select Notifications Group</input>
+			</label>
+			{% else %}
 			<label for="recommed-2">
 				<input type="radio"
 					id="recommed-2"
 					name="event_notification" value="groups">Select Notifications Group</input>
 			</label>
+			{% endif %}
             <!-- multi-line text input control -->
             <textarea name="comment" id="comment"
                 placeholder="">
@@ -208,16 +225,32 @@
 			</label>
 
 			<!-- Input Type Radio Button -->
+			{% if contact.status == 'active' %}
+			<label for="recommed-1">
+				<input type="radio"
+					id="recommed-1"
+					name="status" value="active" checked>Active</input>
+			</label>
+			{% else %}
 			<label for="recommed-1">
 				<input type="radio"
 					id="recommed-1"
 					name="status" value="active">Active</input>
 			</label>
+			{% endif %}
+			{% if contact.status == 'inactive' %}
+			<label for="recommed-2">
+				<input type="radio"
+					id="recommed-2"
+					name="status" value="inactive" checked>In-Active</input>
+			</label>
+			{% else %}
 			<label for="recommed-2">
 				<input type="radio"
 					id="recommed-2"
 					name="status" value="inactive">In-Active</input>
 			</label>
+			{% endif %}
 		</div>
 
 		<div class="form-control">
@@ -225,22 +258,40 @@
 			</label>
 			<!-- Input Type Checkbox -->
 			<label for="inp-1">
-				{% contact.event_types %}
+				{% if 'sos' in contact.event_types %}
 				<input type="checkbox"
 					name="event_types" value="sos" checked>SOS</input></label>
 				{% else %}
 				<input type="checkbox"
 					name="event_types" value="sos">SOS</input></label>
 				{% endif %}
+
+			{% if 'all' in contact.event_types %}
 			<label for="inp-3">
 				<input type="checkbox"
+					name="event_types" value="all" checked>All</input></label>
+			{% else %}
+			<input type="checkbox"
 					name="event_types" value="all">All</input></label>
+			{% endif %}
+			{% if 'timer' in contact.event_types %}
+			<label for="inp-4">
+				<input type="checkbox"
+					name="event_types" value="timer" checked>Timer</input></label>
+			{% else %}
 			<label for="inp-4">
 				<input type="checkbox"
 					name="event_types" value="timer">Timer</input></label>
+			{% endif %}
+			{% if 'soft_walk' in contact.event_types %}
+			<label for="inp-6">
+				<input type="checkbox"
+					name="event_types" value="soft_walk" checked>Soft Walk</input></label>
+			{% else %}
 			<label for="inp-6">
 				<input type="checkbox"
 					name="event_types" value="soft_walk">Soft Walk</input></label>
+			{% endif %}
 		</div>
 
 

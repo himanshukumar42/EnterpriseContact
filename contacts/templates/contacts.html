@@ -56,7 +56,11 @@
                         <td>{{contact.email}}</td>
 						<td>{{contact.mobile}}</td>
 						<td>{{contact.event_types}}</td>
+                        {% if contact.status == 'active' %}
                         <td><input type="checkbox" id="myCheckbox" checked></td>
+                        {% else %}
+                        <td><input type="checkbox" id="myCheckbox1"></td>
+                        {% endif %}
                         <td>
                             <a href="{% url 'contact-update' contact.id %}" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
                             <a href="{% url 'contact-delete' contact.id %}" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
