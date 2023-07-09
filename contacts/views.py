@@ -2,21 +2,15 @@ from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from django.views.generic.edit import DeleteView
 from django.urls import reverse_lazy
-from .models import Contacts
+from .models import Contacts, EVENT_CHOICES, COUNTRY_CHOICES, STATUS, NOTIFY
 from rest_framework.views import APIView
 from .serializers import ContactSerializer
 from django.shortcuts import redirect
-from rest_framework.response import Response
 from django.template.loader import render_to_string
 from django.shortcuts import render
 from rest_framework import status
 from django.http import QueryDict
 from django.db.models import Q
-
-
-@api_view(('GET',))
-def health_check(request): # noqa
-    return HttpResponse("<h1>Health Ok</h1>")
 
 
 class ContactsDelete(DeleteView):
@@ -50,19 +44,14 @@ class ContactsSearchAPIVIew(APIView):
         return response
 
 
-class ContactsGetAPIView(APIView):
-    def get(self, request):
-        contacts = Contacts.objects.all()
-        serializer = ContactSerializer(contacts, many=True)
-        rendered_html = render_to_string('index.html', {'contacts': serializer.data})
-        response = HttpResponse(content_type='text/html')
-        response.write(rendered_html)
-        return response
-
-
 class ContactsPostAPIView(APIView):
     def get(self, request):
-        return render(request, "create.html")
+        return render(request, "create.html", context={"data": {
+            "event_choices": EVENT_CHOICES,
+            "country_choices": COUNTRY_CHOICES,
+            "status_choices": STATUS,
+            "notification_choices": NOTIFY,
+        }})
 
     def post(self, request):
         data = request.data
@@ -80,7 +69,13 @@ class ContactsPostAPIView(APIView):
 class ContactsUpdateAPIView(APIView):
     def get(self, request, pk):
         contact = Contacts.objects.get(pk=pk)
-        return render(request, 'edit.html', context={"contact": contact})
+        return render(request, 'edit.html', context={"data": {
+            "contact": contact,
+            "event_choices": EVENT_CHOICES,
+            "country_choices": COUNTRY_CHOICES,
+            "status_choices": STATUS,
+            "notification_choices": NOTIFY,
+        }})
 
     def post(self, request, pk):
         instance = self.get_object(pk)
@@ -89,27 +84,12 @@ class ContactsUpdateAPIView(APIView):
         new_data = QueryDict(mutable=True)
         new_data.update(data)
         new_data['event_types'] = event_types
+
         serializer = ContactSerializer(instance, data=new_data)
         if serializer.is_valid():
             serializer.save()
             return redirect('index')
         return render(request, 'edit.html')
-
-    def patch(self, request, pk):
-        instance = self.get_object(pk)
-        serializer = ContactSerializer(instance, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return redirect('index')
-        return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    def delete(self, request, pk):
-        try:
-            contact = self.get_object(pk)
-            contact.delete()
-            return redirect('index')
-        except Contacts.DoesNotExist:
-            raise status.HTTP_500_INTERNAL_SERVER_ERROR
 
     def get_object(self, pk):
         try:
