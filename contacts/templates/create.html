@@ -7,8 +7,10 @@
 	<meta name="viewport"
 		content="width=device-width, initial-scale=1.0">
 	<title>
-		Build a Survey Form using HTML and CSS
+		Enterprise Contacts
 	</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
 
 	<style>
 
@@ -81,7 +83,7 @@
 	<h1>Create Enterprise Emergency Contact</h1>
 
 	<!-- Create Form -->
-	<form id="form" method="POST", action="{% url 'create-contacts' %}">
+	<form id="form" method="POST" action="{% url 'create-contacts' %}">
 	{% csrf_token %}
 		<!-- Details -->
 		<div class="form-control">
@@ -166,11 +168,7 @@
 					name="status" value="{{ status.0 }}">{{ status.1 }}</input>
 			</label>
 			{% endfor %}
-<!--			<label for="recommed-2">-->
-<!--				<input type="radio"-->
-<!--					id="recommed-2"-->
-<!--					name="status" value="inactive">In-Active</input>-->
-<!--			</label>-->
+
 		</div>
 
 		<div class="form-control">
@@ -194,5 +192,6 @@
 			Cancel
 		</button>
 	</form>
+
 </body>
 </html>

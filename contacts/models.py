@@ -1,11 +1,26 @@
 from django.db import models
 
 COUNTRY_CHOICES = (
-        ('+1', 'United States (+1)'),
-        ('+44', 'United Kingdom (+44)'),
-        ('+10', 'Pakistan (+10)'),
-        ('+91', 'India (+91)'),
-
+    ('+91', 'India (+91)'),
+    ('+1', 'United States (+1)'),
+    ('+86', 'China (+86)'),
+    ('+44', 'United Kingdom (+44)'),
+    ('+33', 'France (+33)'),
+    ('+81', 'Japan (+81)'),
+    ('+49', 'Germany (+49)'),
+    ('+7', 'Russia (+7)'),
+    ('+55', 'Brazil (+55)'),
+    ('+61', 'Australia (+61)'),
+    ('+92', 'Pakistan (+92)'),
+    ('+34', 'Spain (+34)'),
+    ('+39', 'Italy (+39)'),
+    ('+52', 'Mexico (+52)'),
+    ('+27', 'South Africa (+27)'),
+    ('+971', 'United Arab Emirates (+971)'),
+    ('+1', 'Canada (+1)'),
+    ('+65', 'Singapore (+65)'),
+    ('+81', 'South Korea (+82)'),
+    ('+358', 'Finland (+358)')
 )
 
 NOTIFY = (
@@ -18,18 +33,11 @@ STATUS = (
     ('inactive', 'Inactive')
 )
 
-
 EVENT_CHOICES = (
     ('sos', 'SOS'),
     ('all', 'All'),
     ('timer', 'Timer'),
     ('safe_walk', 'Safe WALK'),
-)
-
-GROUPS = (
-    ("group1", "Group1"),
-    ("group2", "Group2"),
-    ("group3", "Group3")
 )
 
 
@@ -51,3 +59,4 @@ class Contacts(models.Model):
 
     def set_event_types(self, event_types_list):
         self.event_types = ','.join(event_types_list)
+

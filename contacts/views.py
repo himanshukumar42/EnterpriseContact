@@ -1,24 +1,16 @@
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from django.views.generic.edit import DeleteView
-from django.contrib.auth.models import Group
 from django.urls import reverse_lazy
-from .models import Contacts, EVENT_CHOICES, COUNTRY_CHOICES, GROUPS, STATUS, NOTIFY
+from .models import Contacts, EVENT_CHOICES, COUNTRY_CHOICES, STATUS, NOTIFY
 from rest_framework.views import APIView
 from .serializers import ContactSerializer
 from django.shortcuts import redirect
-from rest_framework.response import Response
 from django.template.loader import render_to_string
 from django.shortcuts import render
 from rest_framework import status
 from django.http import QueryDict
 from django.db.models import Q
-import json
-
-
-@api_view(('GET',))
-def health_check(request): # noqa
-    return HttpResponse("<h1>Health Ok</h1>")
 
 
 class ContactsDelete(DeleteView):
@@ -59,7 +51,6 @@ class ContactsPostAPIView(APIView):
             "country_choices": COUNTRY_CHOICES,
             "status_choices": STATUS,
             "notification_choices": NOTIFY,
-            "groups_choices": GROUPS
         }})
 
     def post(self, request):
@@ -68,7 +59,6 @@ class ContactsPostAPIView(APIView):
         new_data = QueryDict(mutable=True)
         new_data.update(data)
         new_data['event_types'] = event_types
-        new_data['groups'] = data.get('groups').strip()
         serializer = ContactSerializer(data=new_data)
         if serializer.is_valid():
             serializer.save()
@@ -85,7 +75,6 @@ class ContactsUpdateAPIView(APIView):
             "country_choices": COUNTRY_CHOICES,
             "status_choices": STATUS,
             "notification_choices": NOTIFY,
-            "groups_choices": GROUPS
         }})
 
     def post(self, request, pk):
@@ -95,27 +84,12 @@ class ContactsUpdateAPIView(APIView):
         new_data = QueryDict(mutable=True)
         new_data.update(data)
         new_data['event_types'] = event_types
+
         serializer = ContactSerializer(instance, data=new_data)
         if serializer.is_valid():
             serializer.save()
             return redirect('index')
         return render(request, 'edit.html')
-
-    # def patch(self, request, pk):
-    #     instance = self.get_object(pk)
-    #     serializer = ContactSerializer(instance, data=request.data, partial=True)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return redirect('index')
-    #     return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    def delete(self, request, pk):
-        try:
-            contact = self.get_object(pk)
-            contact.delete()
-            return redirect('index')
-        except Contacts.DoesNotExist:
-            raise status.HTTP_500_INTERNAL_SERVER_ERROR
 
     def get_object(self, pk):
         try:
