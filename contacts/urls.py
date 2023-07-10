@@ -1,10 +1,13 @@
-from django.urls import path
-from .views import ContactsDelete
-from .views import ContactsSearchAPIVIew, ContactsPostAPIView, ContactsUpdateAPIView
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import ContactsSearchAPIVIew, ContactsAPIView, ContactsPostAPIView, ContactsViewSet
+
+router = DefaultRouter()
+router.register(r'', ContactsViewSet)
 
 urlpatterns = [
     path('', ContactsSearchAPIVIew.as_view(), name='index'),
-    path('contacts-delete/<int:pk>', ContactsDelete.as_view(), name='contact-delete'),
-    path('create-contacts/', ContactsPostAPIView.as_view(), name='create-contacts'),
-    path('update-contacts/<int:pk>/', ContactsUpdateAPIView.as_view(), name='update-contacts')
+    path('contact-view/', include(router.urls)),
+    path('contacts/', ContactsPostAPIView.as_view(), name='contacts-create'),
+    path('contacts/<int:pk>/', ContactsAPIView.as_view(), name='contacts-update'),
 ]
