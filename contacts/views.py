@@ -40,7 +40,7 @@ class ContactsPostAPIView(APIView):
     def get(self, request):
         contacts = Contacts.objects.all()
         serializer = ContactSerializer(contacts, many=True)
-        return Response(data=serializer.errors, content_type='application/json', status=status.HTTP_404_NOT_FOUND)
+        return Response(data=serializer.data, content_type='application/json', status=status.HTTP_200_OK)
 
     def post(self, request):
         data = request.data
