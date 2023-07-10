@@ -20,7 +20,8 @@ COUNTRY_CHOICES = (
     ('+1', 'Canada (+1)'),
     ('+65', 'Singapore (+65)'),
     ('+81', 'South Korea (+82)'),
-    ('+358', 'Finland (+358)')
+    ('+358', 'Finland (+358)'),
+    ('+10', 'Pakistan (+10)')
 )
 
 NOTIFY = (

@@ -1,22 +1,12 @@
-from django.http import HttpResponse
-from rest_framework.decorators import api_view
-from django.views.generic.edit import DeleteView
-from django.urls import reverse_lazy
-from .models import Contacts, EVENT_CHOICES, COUNTRY_CHOICES, STATUS, NOTIFY
+from rest_framework.response import Response
+from .models import Contacts
 from rest_framework.views import APIView
+from django.forms.models import model_to_dict
+from rest_framework import viewsets
 from .serializers import ContactSerializer
-from django.shortcuts import redirect
-from django.template.loader import render_to_string
-from django.shortcuts import render
 from rest_framework import status
-from django.http import QueryDict
+from django.core import serializers
 from django.db.models import Q
-
-
-class ContactsDelete(DeleteView):
-    model = Contacts
-    fields = '__all__'
-    success_url = reverse_lazy('index')
 
 
 class ContactsSearchAPIVIew(APIView):
@@ -38,61 +28,82 @@ class ContactsSearchAPIVIew(APIView):
             contacts = Contacts.objects.all()
 
         serializer = ContactSerializer(contacts, many=True)
-        rendered_html = render_to_string('index.html', {'contacts': serializer.data})
-        response = HttpResponse(content_type='text/html')
-        response.write(rendered_html)
-        return response
+        return Response(data=serializer.data, content_type='application/json')
+
+
+class ContactsViewSet(viewsets.ModelViewSet):
+    queryset = Contacts.objects.all()
+    serializer_class = ContactSerializer
 
 
 class ContactsPostAPIView(APIView):
     def get(self, request):
-        return render(request, "create.html", context={"data": {
-            "event_choices": EVENT_CHOICES,
-            "country_choices": COUNTRY_CHOICES,
-            "status_choices": STATUS,
-            "notification_choices": NOTIFY,
-        }})
+        contacts = Contacts.objects.all()
+        serializer = ContactSerializer(contacts, many=True)
+        return Response(data=serializer.errors, content_type='application/json', status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request):
         data = request.data
-        event_types = ','.join(data.getlist('event_types'))
-        new_data = QueryDict(mutable=True)
-        new_data.update(data)
-        new_data['event_types'] = event_types
-        serializer = ContactSerializer(data=new_data)
+        event_types = ','.join(data.get('event_types'))
+        data['event_types'] = event_types
+        serializer = ContactSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return redirect('index')
-        return render(request, 'create.html')
+            return Response(data=serializer.data, content_type='application/json', status=status.HTTP_201_CREATED)
+        return Response(data=serializer.errors, content_type='application/json', status=status.HTTP_400_BAD_REQUEST)
 
 
-class ContactsUpdateAPIView(APIView):
+class ContactsAPIView(APIView):
     def get(self, request, pk):
-        contact = Contacts.objects.get(pk=pk)
-        return render(request, 'edit.html', context={"data": {
-            "contact": contact,
-            "event_choices": EVENT_CHOICES,
-            "country_choices": COUNTRY_CHOICES,
-            "status_choices": STATUS,
-            "notification_choices": NOTIFY,
-        }})
+        try:
+            instance = Contacts.objects.get(pk=pk)
+        except Contacts.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        instance_dict = model_to_dict(instance)
+        serializer = ContactSerializer(data=instance_dict)
+        if serializer.is_valid():
+            return Response(data=serializer.data, content_type='application/json', status=status.HTTP_200_OK)
+        return Response(data=serializer.errors, content_type='application/json', status=status.HTTP_404_NOT_FOUND)
 
-    def post(self, request, pk):
-        instance = self.get_object(pk)
+    def post(self, request):
         data = request.data
-        event_types = ','.join(data.getlist('event_types'))
-        new_data = QueryDict(mutable=True)
-        new_data.update(data)
-        new_data['event_types'] = event_types
-
-        serializer = ContactSerializer(instance, data=new_data)
+        event_types = ','.join(data.get('event_types'))
+        data['event_types'] = event_types
+        serializer = ContactSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return redirect('index')
-        return render(request, 'edit.html')
+            return Response(data=serializer.data, content_type='application/json', status=status.HTTP_201_CREATED)
+        return Response(data=serializer.errors, content_type='application/json', status=status.HTTP_400_BAD_REQUEST)
 
-    def get_object(self, pk):
+    def put(self, request, pk):
         try:
-            return Contacts.objects.get(pk=pk)
+            instance = Contacts.objects.get(pk=pk)
         except Contacts.DoesNotExist:
-            raise status.HTTP_500_INTERNAL_SERVER_ERROR
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        data = request.data
+        serializer = ContactSerializer(instance, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, content_type='application/json', status=status.HTTP_200_OK)
+        return Response(data=serializer.errors, content_type='application/json', status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, pk):
+        try:
+            instance = Contacts.objects.get(pk=pk)
+        except Contacts.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        data = request.data
+        serializer = ContactSerializer(instance, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, content_type='application/json', status=status.HTTP_200_OK)
+        return Response(data=serializer.data, content_type='application/json', status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        try:
+            instance = Contacts.objects.get(pk=pk)
+        except Contacts.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
