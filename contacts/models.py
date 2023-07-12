@@ -49,6 +49,7 @@ class Contacts(models.Model):
     country_code = models.CharField(max_length=5, choices=COUNTRY_CHOICES, default='+91', null=False)
     mobile = models.CharField(max_length=12, null=False)
     event_notification = models.CharField(max_length=255, choices=NOTIFY, default=None, blank=True, null=True)
+    groups = models.CharField(max_length=255, blank=True, null=True)
     event_types = models.CharField(max_length=100, blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS, default='active')
 
