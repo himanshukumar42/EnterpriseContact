@@ -18,8 +18,9 @@ class ContactsSearchAPIVIew(APIView):
                 Q(email__icontains=request.query_params['search']) |
                 Q(mobile__icontains=request.query_params['search']) |
                 Q(event_types__icontains=request.query_params['search']) |
-                Q(status__icontains=request.query_params['search'])
-                )
+                Q(status__icontains=request.query_params['search']) |
+                Q(event_notification__icontains=request.query_params['search'])
+            )
             if "status" in request.query_params.keys():
                 contacts = contacts.filter(status=request.query_params['status'])
         elif "search" not in request.query_params.keys() and "status" in request.query_params.keys():
