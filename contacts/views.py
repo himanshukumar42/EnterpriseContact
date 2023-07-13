@@ -18,7 +18,7 @@ class ContactsSearchAPIVIew(APIView):
                 Q(email__icontains=request.query_params['search']) |
                 Q(mobile__icontains=request.query_params['search']) |
                 Q(event_types__icontains=request.query_params['search']) |
-                Q(status__icontains=request.query_params['search']) |
+                Q(status=request.query_params['search']) |
                 Q(event_notification__icontains=request.query_params['search'])
             )
             if "status" in request.query_params.keys():
@@ -65,16 +65,6 @@ class ContactsAPIView(APIView):
         if serializer.is_valid():
             return Response(data=serializer.data, content_type='application/json', status=status.HTTP_200_OK)
         return Response(data=serializer.errors, content_type='application/json', status=status.HTTP_404_NOT_FOUND)
-
-    def post(self, request):
-        data = request.data
-        event_types = ','.join(data.get('event_types'))
-        data['event_types'] = event_types
-        serializer = ContactSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(data=serializer.data, content_type='application/json', status=status.HTTP_201_CREATED)
-        return Response(data=serializer.errors, content_type='application/json', status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, pk):
         try:
